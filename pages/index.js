@@ -9,7 +9,7 @@ class NFTLogin extends Component {
     this.state = {
       wallet: "",
       chain: null,
-      contracts: "",
+      contract: "",
       connected: false,
       message: "Login With Your NFT.",
       nfts: []
@@ -50,11 +50,11 @@ class NFTLogin extends Component {
       const connection = await this.connectWallet()
       if (!connection) return console.error('NFT LOGIN => connection to wallet failed')
     }
-    const { message, wallet, chain, contracts } = this.state
+    const { message, wallet, chain, contract } = this.state
     const web3 = new Web3(Web3.givenProvider);
     const nonce = message
     let signature = await web3.eth.personal.sign(nonce, wallet, "log in")
-    let res = await fetch(`/api/nfts?${new URLSearchParams({ contracts, wallet, chain, nonce, signature })}`, {
+    let res = await fetch(`/api/nfts?${new URLSearchParams({ contract, wallet, chain, nonce, signature })}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     })
@@ -117,8 +117,8 @@ class NFTLogin extends Component {
                         type="text"
                         name="contract"
                         id="contract"
-                        value={this.state.contract}
-                        onChange={(e) => this.setState({ contract: e.target.value })}
+                        value="0x2953399124f0cbb46d2cbacd8a89cf0599974963"
+                        readOnly
                         className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -151,11 +151,12 @@ class NFTLogin extends Component {
               <li key={`${nft.contract.address}-${nft.id.tokenId}`} className="relative">
                 <div className="group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 focus-within:ring-indigo-500 overflow-hidden">
                   {nft?.media?.length > 0 && nft.media.map(m => (<img key={m.raw} src={m.gateway} className="w-full object-contain pointer-events-none group-hover:opacity-75" />))}
+                  <p>{nft.balance}</p>
                   <button type="button" className="absolute inset-0 focus:outline-none">
                     <span className="sr-only">View details for {nft.title}</span>
                   </button>
                 </div>
-                <p className="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">{nft.title} ({this.web3utils?.hexToNumber(nft.id.tokenId)})</p>
+                <p className="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">{nft.title} </p>
                 <p className="block text-sm font-medium text-gray-500 pointer-events-none">{nft.description}</p>
                 <div >
                 </div>
