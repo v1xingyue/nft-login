@@ -12,7 +12,8 @@ class NFTLogin extends Component {
       contract: "",
       connected: false,
       message: "Login With Chaoverse NFT.",
-      nfts: []
+      nfts: [],
+      loading: "",
     }
     this.web3utils = new Web3(Web3.givenProvider).utils
   }
@@ -44,6 +45,7 @@ class NFTLogin extends Component {
   }
 
   fetchNFTs = async (e) => {
+
     if (e && e.preventDefault) e.preventDefault()
     const { connected } = this.state
     if (!connected) {
@@ -54,18 +56,26 @@ class NFTLogin extends Component {
     const web3 = new Web3(Web3.givenProvider);
     const nonce = message
     let signature = await web3.eth.personal.sign(nonce, wallet, "log in")
+
+    this.setState({
+      loading: "animate-bounce"
+    })
+
     let res = await fetch(`/api/nfts?${new URLSearchParams({ contract, wallet, chain, nonce, signature })}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     })
     res = await res.json()
+    this.setState({
+      loading: ""
+    })
     if (res.success && Array.isArray(res.nfts)) {
       this.setState({ nfts: res.nfts, count: res.totalCount })
     }
   }
 
   render() {
-    const { chain, wallet, nfts, count } = this.state
+    const { chain, wallet, nfts, count, loading } = this.state
     return (
       <div className="p-16">
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -101,18 +111,11 @@ class NFTLogin extends Component {
             <div>
               <div className="bg-white shadow sm:rounded-lg">
                 <div className="px-4 py-5 sm:p-6">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">Get My NFTs</h3>
-                  <div className="mt-2 max-w-xl text-sm text-gray-500">
-                  </div>
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">Get Chaoverse NFTs</h3>
                   <form onSubmit={this.fetchNFTs} className="mt-5 flex flex-col justify-start items-start w-full" >
-                    <div className="w-full sm:max-w-xs" >
-                    </div>
-                    <div className="w-full sm:max-w-xs pt-2 pb-6">
-
-                    </div>
                     <button
                       type="submit"
-                      className="inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      className={loading + " inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"}
                     >
                       Fetch My Chaoverse NFTs
                     </button>
