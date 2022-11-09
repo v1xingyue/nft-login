@@ -3,7 +3,7 @@ const ethUtil = require("ethereumjs-util");
 
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const GOERLI_ALCHEMY_API_URL = "https://polygon-mainnet.g.alchemy.com/v2/SCJ33Q4yqU2BaxI5s5klGg0pU9ArIKGn";
-const MAINNET_ALCHEMY_API_URL = "https://mainnet.infura.io/v3/";
+const MAINNET_ALCHEMY_API_URL = "https://eth-mainnet.g.alchemy.com/v2/rw5Yd7N-VMI0iT3_HzhO0qCZI7kG26ae";
 
 const handler = async (req, res) => {
   try {
@@ -34,8 +34,7 @@ const handler = async (req, res) => {
 
     // fetch the nfts
     const _nfts = await web3.alchemy.getNfts({
-      owner: addr,
-      contractAddresses: [contract],
+      owner: addr
     })
 
     // match nfts to contract addresses (if any)
