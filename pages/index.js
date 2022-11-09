@@ -22,6 +22,15 @@ class NFTLogin extends Component {
     try {
       const chain = await ethereum.request({ method: 'eth_chainId' });
       this.setState({ chain })
+
+      ethereum.on('chainChanged', (chain) => {
+        window.location.reload();
+        this.setState({
+          chain: chain,
+          connected: false,
+        })
+      });
+
     } catch (e) {
       if (!ethereum) return alert('Please install metamask')
     }
