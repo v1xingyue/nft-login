@@ -41,17 +41,9 @@ const handler = async (req, res) => {
     // match nfts to contract addresses (if any)
     const nfts = []
     _nfts.ownedNfts.forEach(nft => {
-      if (nft.id.tokenId == "0x8e331eacd843b49f9f44cde57ba0c476eda91bb90000000000003100000003e8") {
+      if (nft.metadata.external_link == "https://twitter.com/Chao_NFT") {
         nfts.push(nft);
       }
-      // console.log(nft, contract);
-      // if (!contract) {
-      //   nfts.push(nft)
-      // } else {
-      // if (contract.toLowerCase().split(',').indexOf(nft.contract.address.toLowerCase()) !== -1) {
-      //   nfts.push(nft)
-      // }
-      // }
     })
 
     return res.json({ success: true, nfts, totalCount: _nfts.totalCount })
