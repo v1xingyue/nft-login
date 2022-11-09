@@ -11,7 +11,7 @@ class NFTLogin extends Component {
       chain: null,
       contract: "",
       connected: false,
-      message: "Login With Your NFT.",
+      message: "Login With Chaoverse NFT.",
       nfts: []
     }
     this.web3utils = new Web3(Web3.givenProvider).utils
@@ -103,43 +103,18 @@ class NFTLogin extends Component {
                 <div className="px-4 py-5 sm:p-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">Get My NFTs</h3>
                   <div className="mt-2 max-w-xl text-sm text-gray-500">
-                    <p>
-                      If you leave the contract field empty, the api will return all your NFTs, not just the ones that match
-                      your contract.
-                    </p>
                   </div>
-                  <form onSubmit={this.fetchNFTs} className="mt-5 flex flex-col justify-start items-start w-full">
-                    <div className="w-full sm:max-w-xs">
-                      <label htmlFor="contract" >
-                        Contract Address
-                      </label>
-                      <input
-                        type="text"
-                        name="contract"
-                        id="contract"
-                        value="0x2953399124f0cbb46d2cbacd8a89cf0599974963"
-                        readOnly
-                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                      />
+                  <form onSubmit={this.fetchNFTs} className="mt-5 flex flex-col justify-start items-start w-full" >
+                    <div className="w-full sm:max-w-xs" >
                     </div>
                     <div className="w-full sm:max-w-xs pt-2 pb-6">
-                      <label htmlFor="message">
-                        Login Message
-                      </label>
-                      <input
-                        type="text"
-                        name="message"
-                        id="message"
-                        value={this.state.message}
-                        onChange={(e) => this.setState({ message: e.target.value })}
-                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                      />
+
                     </div>
                     <button
                       type="submit"
                       className="inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                      Fetch My NFTs
+                      Fetch My Chaoverse NFTs
                     </button>
                   </form>
                 </div>
