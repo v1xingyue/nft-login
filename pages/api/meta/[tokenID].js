@@ -1,10 +1,11 @@
 const handler = async (req, res) => {
     const { tokenID } = req.query
+    console.log(tokenID)
     res.json({
-        "name": "hello",
-        "description": "hello world",
-        "image": "https://ipfs.io/ipfs/bafkreifvhjdf6ve4jfv6qytqtux5nd4nwnelioeiqx5x2ez5yrgrzk7ypi",
-        "tokenID": tokenID,
+        'name': 'OpenSea Creature Accessories',
+        'description': "Fun and useful accessories for your OpenSea creatures.",
+        'image': 'https://example.com/image.png',
+        'external_link': 'https://github.com/ProjectOpenSea/opensea-erc1155/'
     })
 }
 export default handler;
