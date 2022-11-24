@@ -4,7 +4,7 @@ const handler = async (req, res) => {
     res.json({
         'name': 'OpenSea Creature Accessories',
         'description': "Fun and useful accessories for your OpenSea creatures.",
-        'image': 'https://example.com/image.png',
+        'image': 'https://avatars.githubusercontent.com/u/974169',
         'external_link': 'https://github.com/ProjectOpenSea/opensea-erc1155/'
     })
 }
