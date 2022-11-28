@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3'
+import chaoverse from './chaoverse';
+import Chaoverse from './chaoverse';
+const Contract = require('web3-eth-contract');
 
-const BasicHeader = ({ chain, wallet }) => {
-
+const BasicHeader = ({ chain, wallet, level }) => {
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-lg">
       <div className="px-4 py-5 sm:px-6">
@@ -20,10 +22,42 @@ const BasicHeader = ({ chain, wallet }) => {
               {wallet ? wallet : "disconnected"}
             </dd>
           </div>
+          <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">Chaoverse</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              Level: {level.level}
+            </dd>
+          </div>
         </dl>
       </div>
     </div>
   );
+}
+
+const refreshLevel = async (wallet) => {
+  const web3 = new Web3(Web3.givenProvider);
+  let contract = new web3.eth.Contract(
+    chaoverse.chaoverseWeb3(),
+    "0xed688146a4ed2441a69b6e5940e60f0e22a046fd",
+    {
+      from: wallet,
+      gasPrice: '308323300000',
+    }
+  );
+  return contract.methods.refreshLevel().send({
+    from: wallet
+  });
+}
+
+
+const currentLevel = async (wallet) => {
+  if (wallet != "") {
+    const web3 = new Web3(Web3.givenProvider);
+    let contract = new web3.eth.Contract(chaoverse.chaoverseWeb3(), "0xed688146a4ed2441a69b6e5940e60f0e22a046fd");
+    return contract.methods.userLevels(wallet).call();
+  } else {
+    return { level: 0, expire: 0 };
+  }
 }
 
 const fetchNFTs = async ({ message, wallet, chain, contract }) => {
@@ -70,7 +104,7 @@ const connectWallet = async () => {
 
 const OperateList = ({ wallet, callback, chain }) => {
   const message = "Fetch my Chaoverse NFTS!";
-  let { setWallet, setNftData } = callback;
+  let { setWallet, setNftData, updateLevel } = callback;
   const [loading, setLoading] = useState("");
   return (
     <>
@@ -91,18 +125,33 @@ const OperateList = ({ wallet, callback, chain }) => {
       )}
 
       {wallet && (
-        <button
-          type="button"
-          onClick={async () => {
-            setLoading("animate-bounce");
-            let nftData = await fetchNFTs({ wallet, message, chain })
-            setNftData(nftData);
-            setLoading("");
-          }}
-          className={loading + " inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"}
-        >
-          Fetch My Chaoverse NFTs
-        </button>
+
+
+        <>
+
+          <button
+            type="button"
+            onClick={async () => {
+              let levelData = await refreshLevel(wallet);
+              console.log(levelData);
+            }}
+            className={loading + " mr-1.5	 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"}
+          >
+            refresh Level
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              setLoading("animate-bounce");
+              let nftData = await fetchNFTs({ wallet, message, chain })
+              setNftData(nftData);
+              setLoading("");
+            }}
+            className={loading + " inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"}
+          >
+            Fetch My Chaoverse NFTs
+          </button>
+        </>
       )}
 
     </>
@@ -138,6 +187,7 @@ export default () => {
   const [chain, setChainId] = useState("0x89");
   const [wallet, setWallet] = useState("");
   const [nftData, setNftData] = useState({ nfts: [], count: 0 });
+  const [level, updateLevel] = useState({ level: 1, expire: 0 });
 
   useEffect(() => {
     (async () => {
@@ -155,12 +205,23 @@ export default () => {
     })();
   })
 
+  useEffect(() => {
+    console.log("wallet changed ...");
+    (async () => {
+      let level = await currentLevel(wallet);
+      updateLevel({
+        level: level.level,
+        expire: level.expire
+      })
+    })();
+  }, [wallet])
+
   return (
     <>
       <div className='p-16'>
-        <BasicHeader chain={chain} wallet={wallet} />
+        <BasicHeader chain={chain} wallet={wallet} level={level} />
         <div className="p-8">
-          <OperateList wallet={wallet} chain={chain} callback={{ setWallet, setNftData }} />
+          <OperateList wallet={wallet} chain={chain} callback={{ setWallet, setNftData, updateLevel }} />
         </div>
         <div className="p-8">
           <NftList nfts={nftData.nfts} count={nftData.count}></NftList>
