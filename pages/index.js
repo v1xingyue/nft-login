@@ -123,10 +123,7 @@ const OperateList = ({ wallet, callback, chain }) => {
       )}
 
       {wallet && (
-
-
         <>
-
           <button
             type="button"
             onClick={async () => {
@@ -151,9 +148,7 @@ const OperateList = ({ wallet, callback, chain }) => {
           </button>
         </>
       )}
-
     </>
-
   )
 }
 
@@ -180,7 +175,7 @@ const NftList = ({ nfts, count }) => {
   );
 }
 
-export default () => {
+const Index = () => {
 
   const [chain, setChainId] = useState("0x89");
   const [wallet, setWallet] = useState("");
@@ -228,3 +223,5 @@ export default () => {
     </>
   );
 }
+
+export default Index;
