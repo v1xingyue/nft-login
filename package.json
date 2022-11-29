@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": " ",
-    "dev": "export ENV=development && next dev"
+    "dev": "export ENV=development && next dev",
+    "build": "export ENV=production && next build"
   },
   "repository": {
     "type": "git",
