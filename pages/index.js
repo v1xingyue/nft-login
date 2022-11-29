@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3'
-import chaoverse from './chaoverse';
-import Chaoverse from './chaoverse';
-const Contract = require('web3-eth-contract');
+import chaoverse from '../chaoverse';
 
 const BasicHeader = ({ chain, wallet, level }) => {
   return (
