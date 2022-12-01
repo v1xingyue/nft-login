@@ -1,5 +1,35 @@
 export default [
     {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "_addr",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "count",
+                "type": "uint256"
+            }
+        ],
+        "name": "AccontNftGot",
+        "type": "event"
+    },
+    {
         "inputs": [
             {
                 "internalType": "string",
@@ -105,11 +135,6 @@ export default [
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
-    },
-    {
-        "inputs": [],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
     },
     {
         "anonymous": false,
@@ -396,6 +421,19 @@ export default [
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "nftNamesCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "bytes4",
@@ -433,6 +471,16 @@ export default [
                 "internalType": "uint256",
                 "name": "expire",
                 "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "uniqueCount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalCount",
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -451,4 +499,4 @@ export default [
         "stateMutability": "view",
         "type": "function"
     }
-];
+]

@@ -4,8 +4,8 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts@4.8.0/access/AccessControl.sol";
 import "@openzeppelin/contracts@4.8.0/token/ERC1155/ERC1155.sol";
 
-contract ChaoverseMember_0 is AccessControl {
-    uint256 public constant levelCacheBlock = 32;
+contract ChaoverseMember_1 is AccessControl {
+    event AccontNftGot(string name, address _addr, uint256 count);
 
     struct ChaoNFT {
         address contractAddress;
@@ -16,24 +16,29 @@ contract ChaoverseMember_0 is AccessControl {
     struct memberLevel {
         uint256 level;
         uint256 expire;
+        uint256 uniqueCount;
+        uint256 totalCount;
     }
 
-    string public contractName = "chaoverse_member";
-    string public version = "0.0.0";
-    address payable public developer;
+    uint256 public constant levelCacheBlock = 32;
+    string public constant contractName = "chaoverse_member";
+    string public constant version = "0.0.2";
 
+    address payable public developer;
     string[] public nftNames;
+    uint256 public nftNamesCount;
 
     mapping(string => ChaoNFT) public communityNFTS;
     mapping(address => memberLevel) public userLevels;
 
-    function donate() public payable {
-        developer.transfer(msg.value);
-    }
-
     constructor() {
         developer = payable(msg.sender);
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        nftNamesCount = 0;
+    }
+
+    function donate() public payable {
+        developer.transfer(msg.value);
     }
 
     function nftContain(string memory name) public view returns (bool) {
@@ -45,13 +50,11 @@ contract ChaoverseMember_0 is AccessControl {
 
     modifier nftNotAdded(string memory name) {
         require(!nftContain(name));
-        // 空函数体
         _;
     }
 
     modifier nftAdded(string memory name) {
         require(nftContain(name));
-        // 空函数体
         _;
     }
 
@@ -62,6 +65,7 @@ contract ChaoverseMember_0 is AccessControl {
     ) public onlyRole(DEFAULT_ADMIN_ROLE) nftNotAdded(name) {
         nftNames.push(name);
         communityNFTS[name] = ChaoNFT(contractAddress, tokenID, 0);
+        nftNamesCount += 1;
     }
 
     function updateWeight(string calldata name, uint256 weight)
@@ -106,7 +110,8 @@ contract ChaoverseMember_0 is AccessControl {
                     nft.tokenID
                 );
 
-                if (nftCount > 0) {
+                if (nftTmpCount > 0) {
+                    emit AccontNftGot(name, msg.sender, nftTmpCount);
                     uniqueCount += 1;
                     totalCount += nftTmpCount;
                 }
@@ -115,31 +120,53 @@ contract ChaoverseMember_0 is AccessControl {
 
         uint256 expireBlock = block.number + levelCacheBlock;
 
-        // 练气
-        if (totalCount >= 1) {
-            userLevels[msg.sender] = memberLevel(1, expireBlock);
-        }
-
-        //筑基
-        if (uniqueCount > 3) {
-            userLevels[msg.sender] = memberLevel(2, expireBlock);
-        }
-
-        //结丹
-        if (uniqueCount > 10) {
-            userLevels[msg.sender] = memberLevel(3, expireBlock);
-        }
-
-        //元婴
-        if (uniqueCount > 25) {
-            userLevels[msg.sender] = memberLevel(4, expireBlock);
-        }
-
         //化神
         if (totalCount >= 200 && uniqueCount >= 40) {
-            userLevels[msg.sender] = memberLevel(5, expireBlock);
+            userLevels[msg.sender] = memberLevel(
+                5,
+                expireBlock,
+                uniqueCount,
+                totalCount
+            );
         }
-
+        //元婴
+        else if (uniqueCount > 25) {
+            userLevels[msg.sender] = memberLevel(
+                4,
+                expireBlock,
+                uniqueCount,
+                totalCount
+            );
+        }
+        //结丹
+        else if (uniqueCount > 10) {
+            userLevels[msg.sender] = memberLevel(
+                3,
+                expireBlock,
+                uniqueCount,
+                totalCount
+            );
+        }
+        //筑基
+        else if (uniqueCount > 3) {
+            userLevels[msg.sender] = memberLevel(
+                2,
+                expireBlock,
+                uniqueCount,
+                totalCount
+            );
+        }
+        // 练气
+        else if (totalCount >= 1) {
+            userLevels[msg.sender] = memberLevel(
+                1,
+                expireBlock,
+                uniqueCount,
+                totalCount
+            );
+        } else {
+            userLevels[msg.sender] = memberLevel(0, expireBlock, 0, 0);
+        }
         return (userLevels[msg.sender].level, uniqueCount, totalCount);
     }
 }

@@ -5,7 +5,6 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <div className="h-full">
-      <link rel="stylesheet" href="https://rsms.me/inter/inter.css" crossOrigin='true' />
       <Component {...pageProps} />
     </div>
   )
