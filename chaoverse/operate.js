@@ -2,7 +2,8 @@ import Web3 from 'web3'
 import MemberMeta from "./member";
 
 const contractAddress = "0x0D58a00fF374642b94174AE444289cb39FC43eee";
-
+const gasPrice = 43000000000;
+const defaultDonate = Web3.utils.toBN("1000000000000000000");
 
 const donate = async (wallet) => {
     const web3 = new Web3(Web3.givenProvider);
@@ -12,24 +13,22 @@ const donate = async (wallet) => {
     );
     return contract.methods.donate().send({
         from: wallet,
-        value: 1000000000000000000,
-        gasPrice: '308323300000',
+        value: defaultDonate,
+        gas
     });
 }
 
 const refreshLevel = async (wallet) => {
-
     const web3 = new Web3(Web3.givenProvider);
+
     let contract = new web3.eth.Contract(
         MemberMeta,
-        contractAddress,
-        {
-            from: wallet,
-            gasPrice: '308323300000',
-        }
+        contractAddress
     );
+
     return contract.methods.refreshLevel().send({
-        from: wallet
+        from: wallet,
+        gasPrice
     });
 }
 
