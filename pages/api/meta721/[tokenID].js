@@ -8,8 +8,20 @@ const handler = async (req, res) => {
         'external_link': 'https://github.com/ProjectOpenSea/opensea-erc1155/',
         'attributes': [
             {
-                'trait_type': "level",
-                "value": "0"
+                'trait_type': "等级",
+                "value": "化神"
+            },
+            {
+                'trait_type': "种类",
+                "value": "52"
+            },
+            {
+                'trait_type': "总数",
+                "value": "229"
+            },
+            {
+                'trait_type': "刷新区块",
+                "value": "36326956"
             }
         ]
     })
